@@ -1,339 +1,261 @@
-# 🍛 Restaurant Analytics Dashboard
-## Bel'Air Tandoori - Business Intelligence Platform
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { Users, DollarSign, Clock, TrendingUp, Star, ShoppingCart } from 'lucide-react';
 
-A business intelligence dashboard designed specifically for Bel'Air Tandoori Restaurant in Besançon, France. This analytics platform provides real-time insights into restaurant performance, customer behavior, and operational efficiency to drive data-driven decision making.
+const RestaurantDashboard = () => {
+  // Sample data simulating restaurant operations
+  const [dashboardData, setDashboardData] = useState({
+    // Peak hours analysis
+    hourlyData: [
+      { hour: '11:00', orders: 12, revenue: 340 },
+      { hour: '12:00', orders: 28, revenue: 780 },
+      { hour: '13:00', orders: 35, revenue: 950 },
+      { hour: '18:00', orders: 45, revenue: 1250 },
+      { hour: '19:00', orders: 52, revenue: 1420 },
+      { hour: '20:00', orders: 48, revenue: 1380 },
+      { hour: '21:00', orders: 32, revenue: 890 }
+    ],
+    
+    // Popular dishes analysis
+    dishPerformance: [
+      { name: 'Chicken Tikka Masala', orders: 145, revenue: 2175, margin: 0.65 },
+      { name: 'Lamb Biryani', orders: 98, revenue: 1960, margin: 0.58 },
+      { name: 'Vegetable Curry', orders: 87, revenue: 1044, margin: 0.72 },
+      { name: 'Naan Bread', orders: 230, revenue: 920, margin: 0.80 },
+      { name: 'Mango Lassi', orders: 76, revenue: 380, margin: 0.75 }
+    ],
+    
+    // Customer demographics (age groups)
+    demographics: [
+      { age: '18-25', count: 45, percentage: 22 },
+      { age: '26-35', count: 68, percentage: 34 },
+      { age: '36-45', count: 52, percentage: 26 },
+      { age: '46-60', count: 28, percentage: 14 },
+      { age: '60+', count: 8, percentage: 4 }
+    ],
+    
+    // Weekly trends
+    weeklyTrends: [
+      { day: 'Mon', orders: 85, revenue: 2340, avgSpend: 27.5 },
+      { day: 'Tue', orders: 92, revenue: 2580, avgSpend: 28.0 },
+      { day: 'Wed', orders: 78, revenue: 2190, avgSpend: 28.1 },
+      { day: 'Thu', orders: 105, revenue: 2940, avgSpend: 28.0 },
+      { day: 'Fri', orders: 145, revenue: 4350, avgSpend: 30.0 },
+      { day: 'Sat', orders: 168, revenue: 5208, avgSpend: 31.0 },
+      { day: 'Sun', orders: 134, revenue: 3886, avgSpend: 29.0 }
+    ]
+  });
 
-## 🌟 Key Features
+  const [selectedMetric, setSelectedMetric] = useState('revenue');
+  const [timeFrame, setTimeFrame] = useState('week');
 
-### Real-Time Performance Monitoring
-- **Live KPI Dashboard**: Track total orders, revenue, average order value, and peak hours
-- **Performance Indicators**: Visual trend indicators showing week-over-week growth
-- **Instant Metrics**: Real-time calculation of key business metrics
-- **Alert System**: Performance notifications and trend alerts
+  // KPI calculations
+  const totalOrders = dashboardData.weeklyTrends.reduce((sum, day) => sum + day.orders, 0);
+  const totalRevenue = dashboardData.weeklyTrends.reduce((sum, day) => sum + day.revenue, 0);
+  const avgOrderValue = totalRevenue / totalOrders;
+  const peakHour = dashboardData.hourlyData.reduce((max, hour) => 
+    hour.orders > max.orders ? hour : max, dashboardData.hourlyData[0]);
 
-### Advanced Analytics & Visualizations
-- **Peak Hours Analysis**: Bar charts showing hourly order volume and revenue patterns
-- **Customer Demographics**: Pie charts displaying age group distribution
-- **Weekly Trends**: Multi-line charts tracking orders, revenue, and average spend
-- **Menu Performance**: Detailed analysis of dish popularity and profitability
+  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#8dd1e1'];
 
-### Business Intelligence Features
-- **Profit Margin Analysis**: Individual dish profitability tracking
-- **Customer Segmentation**: Age-based customer analysis for targeted marketing
-- **Operational Insights**: Peak hour identification for staff optimization
-- **Revenue Optimization**: Data-driven recommendations for menu pricing
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">🍛 Bel Air Tandoori Analytics</h1>
+          <p className="text-gray-600">Business Intelligence Dashboard - Restaurant Performance Insights</p>
+        </div>
 
-### Interactive Data Exploration
-- **Responsive Charts**: Interactive visualizations built with Recharts
-- **Performance Comparisons**: Week-over-week and item-to-item analysis
-- **Drill-Down Capabilities**: Detailed view of specific metrics and time periods
-- **Export Ready**: Clean data presentation suitable for reports
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Total Orders</p>
+                <p className="text-2xl font-bold text-gray-800">{totalOrders}</p>
+                <p className="text-xs text-green-600">↗️ +12% vs last week</p>
+              </div>
+              <ShoppingCart className="h-8 w-8 text-blue-500" />
+            </div>
+          </div>
 
-## 🚀 Quick Start
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Revenue</p>
+                <p className="text-2xl font-bold text-gray-800">€{totalRevenue.toLocaleString()}</p>
+                <p className="text-xs text-green-600">↗️ +8% vs last week</p>
+              </div>
+              <DollarSign className="h-8 w-8 text-green-500" />
+            </div>
+          </div>
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn package manager
-- React development environment
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Avg Order Value</p>
+                <p className="text-2xl font-bold text-gray-800">€{avgOrderValue.toFixed(2)}</p>
+                <p className="text-xs text-red-600">↘️ -2% vs last week</p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-yellow-500" />
+            </div>
+          </div>
 
-### Installation
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Peak Hour</p>
+                <p className="text-2xl font-bold text-gray-800">{peakHour.hour}</p>
+                <p className="text-xs text-gray-600">{peakHour.orders} orders</p>
+              </div>
+              <Clock className="h-8 w-8 text-purple-500" />
+            </div>
+          </div>
+        </div>
 
-1. **Clone the repository**
-   ```bash
-   git clone [repository-url]
-   cd restaurant-analytics-dashboard
-   ```
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Hourly Performance */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center">
+              <Clock className="mr-2 h-5 w-5 text-blue-500" />
+              Peak Hours Analysis
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={dashboardData.hourlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="hour" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="orders" fill="#8884d8" name="Orders" />
+                <Bar dataKey="revenue" fill="#82ca9d" name="Revenue (€)" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+          {/* Customer Demographics */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center">
+              <Users className="mr-2 h-5 w-5 text-green-500" />
+              Customer Demographics
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={dashboardData.demographics}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ age, percentage }) => `${age}: ${percentage}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="count"
+                >
+                  {dashboardData.demographics.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
 
-3. **Install required packages**
-   ```bash
-   npm install react recharts lucide-react
-   # or
-   yarn add react recharts lucide-react
-   ```
+        {/* Weekly Trends */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <TrendingUp className="mr-2 h-5 w-5 text-purple-500" />
+            Weekly Performance Trends
+          </h3>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={dashboardData.weeklyTrends}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="orders" stroke="#8884d8" strokeWidth={3} name="Orders" />
+              <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={3} name="Revenue (€)" />
+              <Line type="monotone" dataKey="avgSpend" stroke="#ffc658" strokeWidth={3} name="Avg Spend (€)" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-4. **Start the development server**
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
+        {/* Menu Performance Analysis */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <Star className="mr-2 h-5 w-5 text-orange-500" />
+            Menu Performance Analysis
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b-2">
+                  <th className="text-left p-3">Dish Name</th>
+                  <th className="text-right p-3">Orders</th>
+                  <th className="text-right p-3">Revenue (€)</th>
+                  <th className="text-right p-3">Profit Margin</th>
+                  <th className="text-right p-3">Performance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dashboardData.dishPerformance.map((dish, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="p-3 font-medium">{dish.name}</td>
+                    <td className="p-3 text-right">{dish.orders}</td>
+                    <td className="p-3 text-right">€{dish.revenue}</td>
+                    <td className="p-3 text-right">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        dish.margin > 0.7 ? 'bg-green-100 text-green-800' :
+                        dish.margin > 0.6 ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {(dish.margin * 100).toFixed(0)}%
+                      </span>
+                    </td>
+                    <td className="p-3 text-right">
+                      <div className="flex items-center justify-end">
+                        <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                          <div 
+                            className="bg-blue-500 h-2 rounded-full" 
+                            style={{width: `${(dish.orders / 230) * 100}%`}}
+                          ></div>
+                        </div>
+                        <span className="text-xs text-gray-600">
+                          {((dish.orders / 230) * 100).toFixed(0)}%
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-5. **Access the dashboard**
-   Open your browser and navigate to `https://chic-longma-f86a3a.netlify.app`
-
-## 📊 Dashboard Components
-
-### KPI Overview Cards
-- **Total Orders**: Weekly order count with growth percentage
-- **Revenue**: Total weekly revenue with trend indicators
-- **Average Order Value**: Customer spending patterns and changes
-- **Peak Hour**: Busiest time identification with order volume
-
-### Analytics Charts
-
-#### Peak Hours Analysis
-- **Visualization**: Bar chart showing hourly performance
-- **Metrics**: Orders and revenue by hour
-- **Insights**: Identify busy periods for staff planning
-- **Time Range**: Covers lunch (11 AM - 1 PM) and dinner (6 PM - 9 PM) service
-
-#### Customer Demographics
-- **Visualization**: Pie chart with age group breakdown
-- **Segments**: 
-  - 18-25 years: 22% of customers
-  - 26-35 years: 34% of customers (primary target)
-  - 36-45 years: 26% of customers
-  - 46-60 years: 14% of customers
-  - 60+ years: 4% of customers
-
-#### Weekly Performance Trends
-- **Visualization**: Multi-line chart tracking key metrics
-- **Metrics**: Orders, revenue, and average spend per day
-- **Insights**: Weekend performance vs weekday patterns
-- **Planning**: Inventory and staffing optimization
-
-#### Menu Performance Analysis
-- **Format**: Detailed table with performance metrics
-- **Metrics**: Orders, revenue, profit margin, and relative performance
-- **Featured Items**:
-  - Chicken Tikka Masala: Best seller (145 orders)
-  - Naan Bread: Highest margin (80%)
-  - Vegetable Curry: Best profit efficiency (72% margin)
-  - Lamb Biryani: Premium positioning
-  - Mango Lassi: Beverage performance
-
-### Business Intelligence Recommendations
-Automated insights and actionable recommendations:
-- **Peak Hour Optimization**: Staff scheduling recommendations
-- **Menu Strategy**: High-margin item promotion suggestions
-- **Customer Targeting**: Marketing focus recommendations
-
-## 🔧 Configuration & Customization
-
-### Data Structure
-The dashboard uses a comprehensive data model:
-
-```javascript
-const dashboardData = {
-  // Hourly performance data
-  hourlyData: [
-    { hour: '11:00', orders: 12, revenue: 340 }
-    // ... more hours
-  ],
-  
-  // Menu item performance
-  dishPerformance: [
-    { 
-      name: 'Chicken Tikka Masala', 
-      orders: 145, 
-      revenue: 2175, 
-      margin: 0.65 
-    }
-    // ... more dishes
-  ],
-  
-  // Customer demographics
-  demographics: [
-    { age: '18-25', count: 45, percentage: 22 }
-    // ... more age groups
-  ],
-  
-  // Weekly trends
-  weeklyTrends: [
-    { 
-      day: 'Mon', 
-      orders: 85, 
-      revenue: 2340, 
-      avgSpend: 27.5 
-    }
-    // ... more days
-  ]
+        {/* Business Recommendations */}
+        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+          <h3 className="text-xl font-bold mb-4">🎯 Business Intelligence Recommendations</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Peak Hour Optimization</h4>
+              <p className="text-sm">Staff more servers during 7-8 PM when orders peak at 52. Consider happy hour promotions during slower 11 AM - 12 PM period.</p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Menu Strategy</h4>
+              <p className="text-sm">Promote Naan Bread (80% margin) and Vegetable Curry (72% margin). Consider bundling with lower-margin items.</p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Customer Targeting</h4>
+              <p className="text-sm">Focus marketing on 26-35 age group (34% of customers). Weekend promotions for families could increase Saturday revenue.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
-```
 
-### Adding New Menu Items
-To track new dishes, add them to the `dishPerformance` array:
-
-```javascript
-{
-  name: 'New Dish Name',
-  orders: 0,
-  revenue: 0,
-  margin: 0.70  // 70% profit margin
-}
-```
-
-### Customizing KPI Calculations
-Modify the KPI calculation logic:
-
-```javascript
-const totalOrders = dashboardData.weeklyTrends.reduce((sum, day) => sum + day.orders, 0);
-const totalRevenue = dashboardData.weeklyTrends.reduce((sum, day) => sum + day.revenue, 0);
-const avgOrderValue = totalRevenue / totalOrders;
-```
-
-### Color Scheme Customization
-Update the color palette for charts:
-
-```javascript
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#8dd1e1'];
-```
-
-## 📈 Business Metrics Explained
-
-### Key Performance Indicators (KPIs)
-
-#### Total Orders
-- **Metric**: Sum of all orders in the selected period
-- **Trend**: Week-over-week percentage change
-- **Target**: 15% monthly growth
-
-#### Revenue
-- **Metric**: Total sales value in euros
-- **Trend**: Percentage change from previous period
-- **Target**: €25,000 weekly revenue
-
-#### Average Order Value (AOV)
-- **Calculation**: Total Revenue ÷ Total Orders
-- **Current**: €28.50 average
-- **Target**: €30+ per order
-
-#### Peak Hour Performance
-- **Identification**: Hour with highest order volume
-- **Current Peak**: 7:00 PM (52 orders)
-- **Optimization**: Staff scheduling and inventory planning
-
-### Profitability Analysis
-
-#### High-Margin Items (70%+ margin)
-- Naan Bread: 80% margin
-- Mango Lassi: 75% margin
-- Vegetable Curry: 72% margin
-
-#### Volume Leaders
-- Naan Bread: 230 orders (highest volume)
-- Chicken Tikka Masala: 145 orders (signature dish)
-- Lamb Biryani: 98 orders (premium item)
-
-### Customer Analytics
-
-#### Primary Demographics
-- **Core Customer**: 26-35 years (34% of customers)
-- **Secondary**: 36-45 years (26% of customers)
-- **Growth Opportunity**: 18-25 years (22% of customers)
-
-#### Behavioral Patterns
-- **Weekend Peak**: Saturday highest revenue (€5,208)
-- **Consistent Spending**: €27-31 average order value
-- **Service Preference**: Dinner service dominant
-
-## 🔍 Usage Guidelines
-
-### Daily Operations
-1. **Morning Review**: Check overnight performance and trends
-2. **Lunch Analysis**: Monitor lunch service KPIs (11 AM - 2 PM)
-3. **Dinner Preparation**: Review peak hour forecasts
-4. **End-of-Day**: Analyze daily performance against targets
-
-### Weekly Planning
-1. **Menu Optimization**: Review dish performance for weekly specials
-2. **Staff Scheduling**: Use peak hour data for optimal staffing
-3. **Inventory Planning**: Align purchases with demand forecasts
-4. **Marketing Strategy**: Target demographics based on customer data
-
-### Monthly Strategy
-1. **Trend Analysis**: Identify long-term patterns and seasonality
-2. **Profitability Review**: Optimize menu pricing and promotions
-3. **Customer Segmentation**: Develop targeted marketing campaigns
-4. **Operational Efficiency**: Streamline based on performance data
-
-## 🛠️ Technical Architecture
-
-### Built With
-- **React 18**: Modern frontend framework with hooks
-- **Recharts**: Professional charting library for data visualization
-- **Lucide React**: Comprehensive icon library
-- **Tailwind CSS**: Utility-first CSS framework for responsive design
-
-### Component Structure
-```
-RestaurantDashboard/
-├── KPI Cards (4 metrics)
-├── Charts Grid
-│   ├── Peak Hours Analysis (Bar Chart)
-│   └── Customer Demographics (Pie Chart)
-├── Weekly Trends (Line Chart)
-├── Menu Performance (Data Table)
-└── Business Recommendations
-```
-
-### State Management
-- **React Hooks**: useState for data management
-- **Real-time Updates**: useEffect for data refresh
-- **Component State**: Local state for interactive features
-
-### Performance Optimization
-- **Responsive Design**: Mobile-first approach
-- **Efficient Rendering**: Optimized chart rendering
-- **Data Caching**: Minimal re-calculations
-- **Lazy Loading**: Progressive data loading
-
-## 🚀 Advanced Features
-
-### Data Integration Capabilities
-- **POS System Integration**: Real-time sales data import
-- **Customer Database**: Demographics and ordering history
-- **Inventory Management**: Stock level correlation with sales
-- **Financial Systems**: Direct accounting integration
-
-### Reporting Features
-- **Automated Reports**: Daily, weekly, and monthly summaries
-- **Export Functionality**: PDF and Excel report generation
-- **Email Alerts**: Performance threshold notifications
-- **Comparative Analysis**: Period-over-period comparisons
-
-### Mobile Optimization
-- **Responsive Design**: Full functionality on all devices
-- **Touch Interactions**: Mobile-friendly chart interactions
-- **Fast Loading**: Optimized for mobile networks
-- **Offline Capability**: Basic functionality without internet
-
-
-### Data Accuracy
-- **Update Frequency**: Real-time with POS integration
-- **Data Validation**: Automated consistency checks
-- **Backup Systems**: Daily data backups
-- **Error Logging**: Comprehensive error tracking
-
-### Security & Privacy
-- **Data Encryption**: All customer data encrypted
-- **Access Control**: Role-based dashboard access
-- **GDPR Compliance**: Full European privacy regulation compliance
-- **Audit Trail**: Complete activity logging
-
-## 🚀 Future Roadmap
-
-### Short-term Enhancements
-- **Real-time Data**: Live POS system integration
-- **Mobile App**: Native iOS/Android dashboard
-- **Advanced Filters**: Date range and category filtering
-- **Export Features**: PDF report generation
-
-### Medium-term Goals 
-- **Predictive Analytics**: AI-powered demand forecasting
-- **Customer Loyalty**: Integrated loyalty program analytics
-- **Multi-location**: Support for restaurant chains
-- **Advanced Segmentation**: Machine learning customer clustering
-
-### Long-term Vision 
-- **IoT Integration**: Smart kitchen equipment data
-- **Competitive Analysis**: Market benchmarking features
-- **Franchise Dashboard**: Multi-tenant architecture
-
+export default RestaurantDashboard;

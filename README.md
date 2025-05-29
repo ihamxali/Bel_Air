@@ -66,7 +66,7 @@ A comprehensive, real-time inventory management system designed specifically for
    ```
 
 5. **Open your browser**
-   Navigate to `http://localhost:3000` to view the application
+   Navigate to '[https://silver-axolotl-f36bf2.netlify.app]` to view the application
 
 ## 📊 System Components
 

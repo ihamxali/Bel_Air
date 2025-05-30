@@ -3,7 +3,7 @@
 
 A comprehensive, real-time inventory management system designed specifically for Bel'Air Tandoori Restaurant in Besançon, France. This system provides intelligent stock tracking, automated reorder alerts, and predictive analytics to optimize restaurant inventory operations.
 
-## 🌟 Features
+## Features
 
 ### Real-Time Stock Monitoring
 - **Live Stock Levels**: Real-time tracking of all inventory items with visual progress indicators
@@ -29,44 +29,7 @@ A comprehensive, real-time inventory management system designed specifically for
 - **Quick Actions**: Fast access to critical functions like reordering
 - **Visual Indicators**: Progress bars and color coding for instant status recognition
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn package manager
-- React environment
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/ihamxali/Bel_Air_IMS]
-   cd inventory-management-system
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Install required packages**
-   ```bash
-   npm install react recharts lucide-react
-   # or
-   yarn add react recharts lucide-react
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
-
-5. **Open your browser**
-   Navigate to https://silver-axolotl-f36bf2.netlify.app to view the application
+### Navigate to https://silver-axolotl-f36bf2.netlify.app to view the application
 
 ## 📊 System Components
 

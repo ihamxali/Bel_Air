@@ -31,7 +31,7 @@ A comprehensive, real-time inventory management system designed specifically for
 
 ### Navigate to https://silver-axolotl-f36bf2.netlify.app to view the application
 
-## 📊 System Components
+##  System Components
 
 ### Dashboard Overview
 - **KPI Cards**: Quick view of total items, critical alerts, inventory value, and reorder needs
@@ -100,7 +100,7 @@ const generateReorderSuggestion = (item) => {
 };
 ```
 
-## 📱 Usage Guide
+##  Usage Guide
 
 ### Daily Operations
 1. **Morning Check**: Review the dashboard for any critical or low stock alerts
@@ -120,7 +120,7 @@ const generateReorderSuggestion = (item) => {
 - Adjust minimum thresholds based on seasonal changes
 - Update supplier information as needed
 
-## 🛠️ Technical Details
+##  Technical Details
 
 ### Built With
 - **React**: Frontend framework for interactive UI
@@ -143,7 +143,7 @@ The system uses a comprehensive data model for each inventory item:
 
 
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 ### Planned Features
 - **Supplier Integration**: Direct API connections with suppliers for automated ordering
